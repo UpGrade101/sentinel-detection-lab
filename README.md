@@ -40,12 +40,17 @@ This can mean an attacker destroying infrastructure or removing evidence.
 
 ## Screenshots
 
-| | |
-|---|---|
-| Query result | ![](screenshots/01-query-result.png) |
-| Analytics rule | ![](screenshots/02-analytics-rule.png) |
-| Incident | ![](screenshots/03-incident-overview.png) |
-| Entities | ![](screenshots/04-incident-entities.png) |
+**Query result**
+![Query result](screenshots/03-query-result.png)
+
+**Analytics rule**
+![Analytics rule](screenshots/04-analytics-rule.png)
+
+**Incident**
+![Incident overview](screenshots/01-incident-overview.png)
+
+**Entities**
+![Incident entities](screenshots/02-incident-entities.png)
 
 Personal identifiers (email, IP, subscription ID) are redacted.
 

@@ -1,0 +1,13 @@
+// Mass resource deletion by single user
+// MITRE ATT&CK: Impact (TA0040) - T1485 Data Destruction
+// Runs every 15 min, looks back 1 hour
+AzureActivity
+| where TimeGenerated > ago(1h)
+| where OperationNameValue endswith "/DELETE"
+| where ActivityStatusValue == "Success"
+| summarize DeletedCount = dcount(_ResourceId),
+            DeletedResources = make_set(_ResourceId),
+            FirstSeen = min(TimeGenerated),
+            LastSeen = max(TimeGenerated)
+    by Caller, CallerIpAddress
+| where DeletedCount >= 3

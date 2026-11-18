@@ -37,6 +37,20 @@ This can mean an attacker destroying infrastructure or removing evidence.
 1. **Fixed time bins split events.** I first used `bin(TimeGenerated, 1h)`. Two deletions 10 minutes apart (12:50 and 13:00) fell into different bins, so the rule missed them.
 2. **Counting events instead of resources.** Azure logged two successful delete events for one storage account. With `count()` one deletion looked like two. I changed it to `dcount(_ResourceId)` to count unique resources.
 3. **Lookback window too wide.** With a 24h window, an old deletion moved `FirstSeen` back by hours and hid three new deletions. I limited the query to 1 hour, matching the rule schedule.
+## Automation: VirusTotal IP enrichment
+
+When the rule creates an incident, an automation rule runs a Logic App playbook.
+The playbook takes every IP entity from the incident, checks it in VirusTotal
+and adds the result as a comment on the incident. The full report is also
+saved to a custom table (VirusTotalIPReport_CL).
+
+- Playbook: IP Enrichment - Virus Total Report (Content hub template, incident trigger)
+- Trigger: automation rule on incident creation, filtered to this analytics rule
+- Permissions: playbook managed identity with Microsoft Sentinel Responder on the resource group
+- VirusTotal API key stored in the Logic App API connection, not in the repo
+
+This automates a step I do manually in my SOC role: checking IPs in VirusTotal
+before deciding what to do with the alert.
 
 ## Screenshots
 
@@ -51,6 +65,12 @@ This can mean an attacker destroying infrastructure or removing evidence.
 
 **Entities**
 ![Incident entities](screenshots/02-incident-entities.png)
+
+**Playbook run**
+![Playbook run](screenshots/05-playbook-run.png)
+
+**VirusTotal comment on the incident**
+![VirusTotal comment](screenshots/06-vt-comment.png)
 
 Personal identifiers (email, IP, subscription ID) are redacted.
 
